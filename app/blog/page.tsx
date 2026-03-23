@@ -1,11 +1,7 @@
-import { Metadata } from 'next'
+"use client";
+
 import Link from 'next/link'
 import { ArrowRight, Calendar, User } from 'lucide-react'
-
-export const metadata: Metadata = {
-  title: 'Blog | SwiftShip Logistics',
-  description: 'Latest news, tips, and insights about international shipping and logistics.',
-}
 
 interface BlogPost {
   id: string

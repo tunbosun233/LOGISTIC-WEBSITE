@@ -1,5 +1,8 @@
+"use client";
+
 import Link from 'next/link'
 import { Calendar, User, ArrowLeft } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 interface Props {
   params: {
@@ -8,7 +11,13 @@ interface Props {
 }
 
 export default function BlogArticlePage({ params }: Props) {
-  // Mock article data - in a real app, this would come from a database
+  const [currentUrl, setCurrentUrl] = useState('')
+
+  useEffect(() => {
+    setCurrentUrl(window.location.href)
+  }, [])
+
+  // Mock article data
   const articles: Record<string, any> = {
     '1': {
       title: 'The Future of International Shipping: What to Expect in 2024',
@@ -83,9 +92,19 @@ export default function BlogArticlePage({ params }: Props) {
     )
   }
 
+  const handleShare = (platform: 'twitter' | 'linkedin') => {
+    const text = encodeURIComponent(article.title)
+    const url = encodeURIComponent(currentUrl)
+    
+    if (platform === 'twitter') {
+      window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank')
+    } else {
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank')
+    }
+  }
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-gradient-to-b from-primary/5 to-transparent">
         <div className="max-w-4xl mx-auto">
           <Link href="/blog" className="text-primary hover:text-primary/80 mb-4 inline-flex items-center gap-1">
@@ -115,7 +134,6 @@ export default function BlogArticlePage({ params }: Props) {
         </div>
       </section>
 
-      {/* Content */}
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
           <article className="prose prose-sm max-w-none text-muted-foreground">
@@ -124,22 +142,26 @@ export default function BlogArticlePage({ params }: Props) {
             </div>
           </article>
 
-          {/* Author Bio */}
           <div className="mt-12 pt-8 border-t border-border">
             <h3 className="text-lg font-semibold text-foreground mb-2">About the Author</h3>
             <p className="text-muted-foreground">
-              {article.author} is a logistics expert with over 10 years of experience in the shipping industry. They share insights and best practices to help businesses optimize their supply chains.
+              {article.author} is a logistics expert with over 10 years of experience in the shipping industry.
             </p>
           </div>
 
-          {/* Share Links */}
           <div className="mt-8 pt-8 border-t border-border">
             <p className="text-sm font-semibold text-foreground mb-4">Share this article:</p>
             <div className="flex gap-4">
-              <button className="px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors text-sm font-medium text-foreground">
+              <button 
+                onClick={() => handleShare('twitter')}
+                className="px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors text-sm font-medium text-foreground"
+              >
                 Share on Twitter
               </button>
-              <button className="px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors text-sm font-medium text-foreground">
+              <button 
+                onClick={() => handleShare('linkedin')}
+                className="px-4 py-2 border border-border rounded-lg hover:bg-muted transition-colors text-sm font-medium text-foreground"
+              >
                 Share on LinkedIn
               </button>
             </div>
@@ -147,7 +169,6 @@ export default function BlogArticlePage({ params }: Props) {
         </div>
       </section>
 
-      {/* Related Articles */}
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-muted/50">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-foreground mb-8">Related Articles</h2>
@@ -158,17 +179,16 @@ export default function BlogArticlePage({ params }: Props) {
               </h3>
               <p className="text-sm text-muted-foreground">Michael Chen • 7 min read</p>
             </Link>
-            <Link href="/blog" className="bg-card border border-border rounded-lg p-6 hover:border-primary transition-colors">
+            <Link href="/blog/1" className="bg-card border border-border rounded-lg p-6 hover:border-primary transition-colors">
               <h3 className="text-lg font-semibold text-foreground hover:text-primary mb-2">
-                Understanding Customs Clearance Procedures
+                The Future of International Shipping
               </h3>
-              <p className="text-sm text-muted-foreground">Emma Davis • 8 min read</p>
+              <p className="text-sm text-muted-foreground">Sarah Johnson • 5 min read</p>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* CTA */}
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-primary text-primary-foreground">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
